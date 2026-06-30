@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Tip Feed</title>
+<link rel="apple-touch-icon" href="data:image/png;base64,">
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(160deg, #0b1f3a 0%, #06304f 50%, #0b1f3a 100%);
+    color: #f5f7fa;
+    padding: 16px 12px 50px;
+    max-width: 480px;
+    margin: 0 auto;
+    min-height: 100vh;
+  }
+  .header { text-align: center; margin-bottom: 14px; }
+  .header h1 { font-size: 19px; margin: 0 0 2px; }
+  .header p { margin: 0; font-size: 12px; color: #9fb6cf; }
+  .banner {
+    background: rgba(255,138,91,0.12);
+    border: 1px solid rgba(255,138,91,0.35);
+    border-radius: 12px;
+    padding: 10px 12px;
+    font-size: 11.5px;
+    color: #ffb088;
+    margin-bottom: 14px;
+    line-height: 1.4;
+  }
+  .refresh-btn {
+    display: block;
+    text-align: center;
+    background: rgba(111,211,160,0.15);
+    border: 1px solid rgba(111,211,160,0.4);
+    color: #6fd3a0;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px;
+    border-radius: 22px;
+    text-decoration: none;
+    margin-bottom: 16px;
+  }
+  .refresh-btn:active { opacity: 0.7; }
+  .card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+  }
+  .card-top { display: flex; justify-content: space-between; align-items: flex-start; }
+  .match { font-size: 14px; font-weight: 600; }
+  .source-tag {
+    font-size: 9px;
+    text-transform: uppercase;
+    color: #5b9dff;
+    background: rgba(91,157,255,0.15);
+    padding: 2px 7px;
+    border-radius: 6px;
+    white-space: nowrap;
+  }
+  .pick-line { margin-top: 8px; display: flex; justify-content: space-between; align-items: center; }
+  .pick { font-size: 13px; color: #ffb088; font-weight: 600; }
+  .odds { font-size: 13px; color: #6fd3a0; font-weight: 700; }
+  .meta { font-size: 10px; color: #7e93ad; margin-top: 6px; }
+  .empty { text-align: center; color: #7e93ad; font-size: 13px; margin-top: 40px; }
+  .footer { text-align: center; font-size: 10px; color: #5d7290; margin-top: 24px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🎯 Tip Feed</h1>
+  <p>Ranked picks, no browsing needed</p>
+</div>
+
+{% if not has_real_key %}
+<div class="banner">
+  Showing demo data — set ODDS_API_KEY to pull real live odds. See README for the 2-minute setup.
+</div>
+{% endif %}
+
+<a href="/refresh" class="refresh-btn">⟳ Refresh tips</a>
+
+{% if tips %}
+  {% for t in tips %}
+  <div class="card">
+    <div class="card-top">
+      <div class="match">{{ t.match }}</div>
+      <div class="source-tag">{{ t.source }}</div>
+    </div>
+    <div class="pick-line">
+      <div class="pick">{{ t.market }}: {{ t.pick }}</div>
+      {% if t.odds %}<div class="odds">{{ t.odds }}</div>{% endif %}
+    </div>
+    {% if t.confidence %}
+    <div class="meta">{{ t.confidence }}% confidence · score {{ "%.1f"|format(t.score) }}</div>
+    {% endif %}
+  </div>
+  {% endfor %}
+{% else %}
+  <div class="empty">No tips yet — tap refresh above.</div>
+{% endif %}
+
+<div class="footer">Informational only · not financial advice · bet responsibly</div>
+
+</body>
+</html>
